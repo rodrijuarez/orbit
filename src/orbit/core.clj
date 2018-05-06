@@ -11,25 +11,24 @@
   (q/frame-rate 30)
   (q/background 240)
   {:locations (o/initial-locations 20)
-   :speeds (vector 0.1 0.1)})
+   :speeds (o/initial-speeds 20)})
 
-;; (defn update-state [state]
-;;   (let [mouse (vector (q/mouse-x) (q/mouse-y))
-;;         snake-location (:snake-location state)
-;;         direction (* (normalise (- mouse (:snake-location state))) 0.5)
-;;         snake-velocity (constrain-vector (+ direction (:snake-velocity state)) -5 5 -5 5)
-;;         snake-location (+ snake-velocity snake-location)]
-;;     (assoc state :snake-location snake-location :snake-velocity snake-velocity)))
+(defn update-state [state]
+  (let [locations (:locations state)
+        speeds (:speeds state)
+        new-speeds (o/recalculate-orbits-speed locations speeds)
+        new-locations (o/recalculate-orbits-location locations new-speeds)]
+    (assoc state :locations new-locations :speeds new-speeds)))
 
 (defn draw-state [state]
+  (q/background 240)
   (o/draw-orbits (:locations state)))
 
 (q/defsketch orbit
   :title "Eco eco eco"
   :size [500 500]
   :setup setup
-  ;; :update update-state
+  :update update-state
   :draw draw-state
   :features [:keep-on-top]
   :middleware [m/fun-mode])
-
