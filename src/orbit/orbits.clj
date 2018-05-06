@@ -16,7 +16,7 @@
 
 (defn draw-orbits [locations]
   (doseq [orbit-location locations]
-    (q/ellipse (nth orbit-location 0) (nth orbit-location 1) 16 16)))
+    (q/point (nth orbit-location 0) (nth orbit-location 1))))
 
 (defn recalculate-speed [location speed]
   (let [mouse (vector (q/mouse-x) (q/mouse-y))
@@ -28,10 +28,12 @@
 (defn recalculate-location [location speed]
   (+ speed location))
 
+(defn double-iteration [a b fn]
+  (for [index (range 0 (count a))]
+    (fn (nth a index) (nth b index))))
+
 (defn recalculate-orbits-speed [locations speeds]
-  (for [index (range 0 (count locations))]
-    (recalculate-speed (nth locations index) (nth speeds index))))
+  double-iteration locations speeds recalculate-speed)
 
 (defn recalculate-orbits-location [locations speeds]
-  (for [index (range 0 (count locations))]
-    (recalculate-location (nth locations index) (nth speeds index))))
+  double-iteration locations speeds recalculate-location)

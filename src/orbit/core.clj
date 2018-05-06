@@ -21,7 +21,6 @@
     (assoc state :locations new-locations :speeds new-speeds)))
 
 (defn draw-state [state]
-  (q/background 240)
   (o/draw-orbits (:locations state)))
 
 (q/defsketch orbit
